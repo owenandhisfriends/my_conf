@@ -1,0 +1,5 @@
+
+[PROJECTS_PARENT] 
+option:ctags_params="--languages=php,c++,c,python" 
+
+~/workspace 

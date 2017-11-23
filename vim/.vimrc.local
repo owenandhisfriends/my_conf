@@ -1,0 +1,183 @@
+colorscheme monokai-chris
+set nocompatible " get out of horrible vi-compatible mode 光标到最右边往右不会折行
+set nosplitright
+set nosplitbelow
+
+"关闭代码折叠
+set nofoldenable
+let g:DisableAutoPHPFolding=1 
+set foldlevelstart=99
+set foldlevel=100 
+set foldmethod=manual
+
+set nospell
+autocmd VimEnter * set nospell
+
+let g:EasyGrepRoot = "search:.git,.svn"
+let g:EasyGrepFilesToExclude = "*.bak, *~, cscope.*, *.a, *.o, *.pyc, tags"
+
+"tab 4空格
+set ts=4
+set expandtab
+set autoindent
+
+set wrap
+if exists('$TMUX')
+  set term=screen-256color
+endif
+set nolist
+set t_Co=256
+set isk+=_,$,@,%,#,- " none of these should be word dividers, so make them not be
+set mouse-=a
+set vb t_vb= 
+set encoding=utf-8
+set fileencoding=utf-8
+set termencoding=utf-8
+set fileencodings=ucs-bom,utf-8,gb18030,big5,gbk,gb2312,cp936
+set colorcolumn=80
+set history=1000
+set ignorecase
+set showmatch 
+set so=7 "距下面的行数为7
+set autowrite " auto writefile when sth happened such as :make or :last or others.See the help
+set wildmode=list:full
+"set listchars=tab:>-,trail:-
+
+"map <leader>f :NERDTreeToggle%:p:h<CR>
+"map <leader>nt :NERDTreeFind<CR>
+"let NERDTreeShowBookmarks=1
+let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
+"let NERDTreeChDirMode=0
+let NERDTreeQuitOnOpen=0 "打开文件后关闭
+"let NERDTreeShowHidden=1
+"let NERDTreeKeepTreeInNewTab=1
+
+
+"keep the last close cursor position
+if has("autocmd")
+    autocmd BufReadPost *
+                \ if line("'\"") > 0 && line("'\"") <= line("$") |
+                \   exe "normal g`\"" |
+                \ endif
+endif
+
+func! CompileGcc()
+    exec "w"
+    let compilecmd="!gcc "
+    let compileflag="-o %< "
+    if search("mpi\.h") != 0
+        let compilecmd = "!mpicc "
+    endif
+    if search("glut\.h") != 0
+        let compileflag .= " -lglut -lGLU -lGL "
+    endif
+    if search("cv\.h") != 0
+        let compileflag .= " -lcv -lhighgui -lcvaux "
+    endif
+    if search("omp\.h") != 0
+        let compileflag .= " -fopenmp "
+    endif
+    if search("math\.h") != 0
+        let compileflag .= " -lm "
+    endif
+    exec compilecmd." % ".compileflag
+endfunc
+func! CompileGpp()
+    exec "w"
+    let compilecmd="!g++ "
+    let compileflag="-o %< "
+    if search("mpi\.h") != 0
+        let compilecmd = "!mpic++ "
+    endif
+    if search("glut\.h") != 0
+        let compileflag .= " -lglut -lGLU -lGL "
+    endif
+    if search("cv\.h") != 0
+        let compileflag .= " -lcv -lhighgui -lcvaux "
+    endif
+    if search("omp\.h") != 0
+        let compileflag .= " -fopenmp "
+    endif
+    if search("math\.h") != 0
+        let compileflag .= " -lm "
+    endif
+    exec compilecmd." % ".compileflag
+endfunc
+func! CompileCode()
+    exec "w"
+    if &filetype == "cpp"
+        exec "call CompileGpp()"
+    elseif &filetype == "c"
+        exec "call CompileGcc()"
+    endif
+endfunc
+func! RunResult()
+    exec "w"
+    if search("mpi\.h") != 0
+        exec "!mpirun -np 4 ./%<"
+    elseif &filetype == "cpp"
+        exec "! ./%<"
+    elseif &filetype == "c"
+        exec "! ./%<"
+    elseif &filetype == "python"
+        exec "call RunPython"
+    elseif &filetype == "java"
+        exec "!java %<"
+    endif
+endfunc
+
+map <F5> :call CompileCode()<CR>
+imap <F5> <ESC>:call CompileCode()<CR>
+vmap <F5> <ESC>:call CompileCode()<CR>
+map <F6> :call RunResult()<CR>
+map <F7> :make<CR>
+
+
+
+
+set autochdir "需要自动改变vim的当前目录为打开的文件所在目录则设置此项"
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+let g:airline_theme="papercolor"
+ "打开tabline功能,方便查看Buffer和切换，这个功能比较不错"
+ "我还省去了minibufexpl插件，因为我习惯在1个Tab下用多个buffer"
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#tabline#fnamemod = ':p:.'
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline#extensions#whitespace#symbol = '!'
+nnoremap <leader>l :bn<CR>
+nnoremap <leader>h :bp<CR>
+
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
+
+let g:indexer_ctagsCommandLineOptions="--c++-kinds=+l+p+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
+
+map <C-j> <C-W>j
+"map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+map <c-i> :CtrlpTag<cr>
+
+"http://zhangfuwen.com/article/9
+"http://yuny.me/?p=486
+imap <TAB>     <Plug>(neosnippet_expand_or_jump)
+
+let g:indexer_dontUpdateTagsIfFileExists = 1
+
+"vim +BundleInstall! +BundleClean +q

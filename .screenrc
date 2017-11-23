@@ -1,0 +1,54 @@
+#
+## ~/.screenrc
+##
+#
+## 启动时不显示欢迎屏幕
+# startup_message off
+#
+##  定义screen的功能键为Ctrl-Z。向终端输入Ctrl-Z时应按 Ctrl-Z z。
+#escape ^Zz
+#
+## 屏幕缓冲区 1024 行。
+# defscrollback 1024
+#
+## 在最下一行显示窗口列表和时钟
+# hardstatus on
+# hardstatus alwayslastline
+# hardstatus string "%{.bW}%-w%{.rY}%n %t%{-}%+w %=%{..G} %H(%l) %{..Y} %Y/%m/%d %c:%s "
+# termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# termcapinfo xterm 'Co#256:AB=E[48;5;%dm:AF=E[38;5;%dm'
+# defencoding gbk
+# encoding gbk gbk
+#%c:%s "
+#
+## 关闭错误提示
+# vbell off
+#
+## 按 Ctrl-Z w 或 Ctrl-Z Ctrl-W 显示窗口列表
+#bind w windowlist -b
+
+# term screen-256color
+
+
+#显示256颜色
+attrcolor b ".I"    # 允许加粗色彩--由于某些原因是必须的
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'   # 告诉screen如何设置颜色。AB 指背景，AF 指前景
+defbce on    # 使用当前背景色来显示删除的字符
+
+encoding UTF-8
+altscreen on
+attrcolor b ".I"
+defbce "on"
+vbell off
+startup_message off
+defscrollback 5000
+bufferfile "$HOME/.screen/exchange"
+hardcopydir "$HOME/.screen/hardcopy"
+sorendition dY
+hardstatus alwayslastline
+sorendition dY
+
+hardstatus off
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m-%d %{W} %c %{g}]'
+# hardstatus string '%{= dW}%-Lw%{= dY}%50> %n*%f %t%{= dW}%+Lw%< %{= dW}%-=%D %m/%d/%y %C %A %1`%{-}'
